@@ -1,0 +1,2 @@
+/home/noth1ng/StudioProjects/Programacion-Movil-1/android/app/.cxx/Debug/6f3q463z/x86_64/CMakeFiles/edit_cache.dir
+/home/noth1ng/StudioProjects/Programacion-Movil-1/android/app/.cxx/Debug/6f3q463z/x86_64/CMakeFiles/rebuild_cache.dir

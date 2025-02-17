@@ -15,16 +15,18 @@ class _NavegadorState extends State<Navegador> {
   Widget? _cuerpo;
 
   int _p =0;
-  void _cambiaPantalla(int i){
-    _p = i;
+  void _cambiaPantalla(int i) {
     setState(() {
-      _p
+      _p = i;
+      if (_p == 0) {
+        _cuerpo = Principal(title: "Epico Ouo");
+      } else if (_p == 1) {
+        _cuerpo = Segunda(title: "Pagina Dowos",);
+      }
     });
   }
 
-  void _pantalla(int i){
 
-  }
 
   @override
   void initState(){

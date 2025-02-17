@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class Segunda extends StatefulWidget {
@@ -11,65 +12,67 @@ class Segunda extends StatefulWidget {
 
 class _SegundaState extends State<Segunda> {
   int _counter = 1;
+  double _tamanoTexto = 24.0; // Tamaño inicial del texto
 
   void _incrementCounter() {
     setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
       _counter++;
+    });
+  }
+
+  void _sizeoftexto() {
+    setState(() {
+      _tamanoTexto += 5.0; // Aumenta el tamaño en 5 píxeles por clic
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
-
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        backgroundColor: CupertinoColors.destructiveRed,
         title: Text(widget.title),
-
       ),
       body: Center(
-
         child: Column(
-
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            const Text(
-              'Pàgina dowos',
-            ),
+            const Text('Pàgina dowos'),
             Text(
               '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
+              style: TextStyle( // Usa _tamañoTexto para el tamaño
+                fontSize: _tamanoTexto,
+                fontWeight: FontWeight.bold,
+                color: Colors.purple,
+              ),
             ),
-            FloatingActionButton(onPressed: (){
-              setState(() {
-                _counter--;
-              });
-
-
-            },
-
-            )
+            FloatingActionButton(
+              onPressed: () {
+                setState(() {
+                  _counter--;
+                });
+              },
+              child: const Icon(Icons.remove),
+            ),
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        hoverColor: Theme.of(context).colorScheme.onPrimary,
-
-        tooltip: 'Suma xd',
-        child: const Icon(Icons.add_circle_outline_rounded),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      floatingActionButton: Column(
+        verticalDirection: VerticalDirection.up,
+        children: [
+          FloatingActionButton(
+            onPressed: _incrementCounter,
+            tooltip: 'Sumar al contador',
+            child: const Icon(Icons.add),
+          ),
+          const SizedBox(height: 10),
+          FloatingActionButton(
+            onPressed: _sizeoftexto,
+            tooltip: 'Aumentar tamaño del texto',
+            child: const Icon(Icons.zoom_in),
+          ),
+        ],
+      ),
     );
   }
 }
