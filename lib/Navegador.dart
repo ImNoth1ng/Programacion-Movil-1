@@ -16,16 +16,26 @@ class _NavegadorState extends State<Navegador> {
   Widget? _cuerpo;
 
   int _p =0;
-  void _cambiaPantalla(int i) {
+  int _pantalla= 0;
+
+  final _Pantallas = [
+    const Principal(title: "Epico Ouo"),
+    const Segunda(title: "Segunda patalla"),
+    const Calculadora(title: "Calculadora Epica")
+  ];
+
+  void _cambiaPantalla(int i) {//recibe indice para saber el boton pulsado
     setState(() {
-      _p = i;
-      if (_p == 0){
-        _cuerpo = Principal(title: "Epico Ouo");
-      } else if (_p == 1) {
-        _cuerpo = Segunda(title: "Pagina Dowos",);
-      } else if (_p == 3 ){
-        _cuerpo = Calculadora(title: "Calculadora");
+      if(i == 0){//ATRAS
+        if(!(_pantalla == 0)){
+          _pantalla--;
+        }
+      } else if (i == 1) {//ADELANTE
+        if(!(_pantalla == _Pantallas.length-1)){
+          _pantalla++;
+        }
       }
+      _cuerpo = _Pantallas[_pantalla];
     });
   }
 
@@ -35,7 +45,7 @@ class _NavegadorState extends State<Navegador> {
 
   @override
   void initState(){
-    _cuerpo = const Principal(title: "Epico Ouo");
+    _cuerpo = _Pantallas[_pantalla];
   }
 
   @override
@@ -44,11 +54,11 @@ class _NavegadorState extends State<Navegador> {
     bottomNavigationBar: BottomNavigationBar(
     items: <BottomNavigationBarItem>[
     BottomNavigationBarItem(
-    icon: Icon(Icons.home),
-    label: 'Principal',),
+    icon: Icon(Icons.arrow_back_rounded),
+    label: 'Atras',),
     BottomNavigationBarItem(
-      icon: Icon(Icons.star),
-      label: 'Segunda',
+      icon: Icon(Icons.arrow_forward_rounded),
+      label: 'Adelante',
 
     ),
         ],
