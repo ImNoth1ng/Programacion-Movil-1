@@ -25,30 +25,26 @@ class _CalculadoraState extends State<Calculadora> {
 
   bool _limpio = false;
 
-  double _tamanoTexto = 24.0; // Tamaño inicial del texto
-
   //FUNCIONES DE LOS BOTONES
-
   void _AddNum(int num){
     setState(() {
       if (!_punto){_res = _res*10+num;}else { _res = _res+(num/_divisoraux); _divisoraux*= 10; }
     });}
-
   void _Operacion(String op){
     setState(() {
 
-      _hayoperacion ? _doOp() : true;
+     // _hayoperacion ? _doOp() : true;
       _resetOps();
       switch (op){
         case "+":setState(() {
-          _cacheoperacion += _res;
+          _cacheoperacion ==0 ? _cacheoperacion = _res : _cacheoperacion += _res;
           _res = 0;
           _suma=true;
         });
           break;
         case "-":
           setState(() {
-            _cacheoperacion -= _res;
+            _cacheoperacion ==0 ? _cacheoperacion = _res : _cacheoperacion -= _res;
             _res = 0;
             _resta=true;
           });
@@ -62,7 +58,7 @@ class _CalculadoraState extends State<Calculadora> {
           break;
         case "/":
           setState(() {
-            _cacheoperacion = _res;
+            _cacheoperacion ==0 ? _cacheoperacion = _res : _cacheoperacion /= _res;
             _res = 0;
             _div=true;
           });
@@ -70,8 +66,6 @@ class _CalculadoraState extends State<Calculadora> {
       }
     });
   }
-  //void  _saveToCache(){setState(() {  });}
-
   void _ObtenerResultado(){
     setState(() {
       _doOp();
@@ -94,15 +88,14 @@ class _CalculadoraState extends State<Calculadora> {
       _cacheoperacion *= _res;
     }
   }
-
   void _resetOps(){
     setState(() {
        _punto = false; _divisoraux = 10;
       _resetFlagsOP();
     });
   }
-  void _resetFlagsOP(){  _suma = false; _resta = false; _multi = false; _div = false;  }
-
+  void _resetFlagsOP(){  
+    _suma = false; _resta = false; _multi = false; _div = false;  }
   void _Limpiar(){
     setState(() {
       if (_limpio){
@@ -136,14 +129,28 @@ class _CalculadoraState extends State<Calculadora> {
 
               width: 355,
               color: Theme.of(context).colorScheme.onSecondaryContainer,
-              child: Text(
-                '$_res',
-                style: TextStyle( // Usa _tamañoTexto para el tamaño
-                  fontSize: 40,
-                  fontWeight: FontWeight.bold,
-                  color: Theme.of(context).colorScheme.onSecondary,
-                ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      '$_cacheoperacion',
+                      style: TextStyle( // Usa _tamañoTexto para el tamaño
+                        fontSize: 40,
+                        fontWeight: FontWeight.bold,
+                        color: Theme.of(context).colorScheme.onSecondary,
+                      ),
 
+                    ),
+                    Text(
+                      '$_res',
+                      style: TextStyle( // Usa _tamañoTexto para el tamaño
+                        fontSize: 40,
+                        fontWeight: FontWeight.bold,
+                        color: Theme.of(context).colorScheme.onSecondary,
+                      ),
+
+                    ),
+                  ]
               ),
             ),
 
