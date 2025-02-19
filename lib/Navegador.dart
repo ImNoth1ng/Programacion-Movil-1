@@ -1,3 +1,4 @@
+import 'package:epico1/Pantallas/calc.dart';
 import 'package:flutter/material.dart';
 import 'package:epico1/Pantallas/principal.dart';
 import 'package:epico1/Pantallas/segunda.dart';
@@ -18,13 +19,17 @@ class _NavegadorState extends State<Navegador> {
   void _cambiaPantalla(int i) {
     setState(() {
       _p = i;
-      if (_p == 0) {
+      if (_p == 0){
         _cuerpo = Principal(title: "Epico Ouo");
       } else if (_p == 1) {
         _cuerpo = Segunda(title: "Pagina Dowos",);
+      } else if (_p == 3 ){
+        _cuerpo = Calculadora(title: "Calculadora");
       }
     });
   }
+
+
 
 
 
