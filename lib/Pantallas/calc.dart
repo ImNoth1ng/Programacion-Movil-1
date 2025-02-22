@@ -12,6 +12,7 @@ class Calculadora extends StatefulWidget {
 
 class _CalculadoraState extends State<Calculadora> {
   double _cacheoperacion = 0;
+  String _cacheop = "";
   double _alturabotones= 60;
   double _res = 0;
   int _divisoraux = 10;//nos ayuda a agregar decimales
