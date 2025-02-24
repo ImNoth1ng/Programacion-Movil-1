@@ -21,9 +21,10 @@ class _NavegadorState extends State<Navegador> {
 
   final _Pantallas = [
     const Bienvenida(title: "WellcUM"),
-    const Principal(title: "Epico Ouo"),
-    const Segunda(title: "Segunda patalla"),
-    const Calculadora(title: "Calculadora Epica")
+    const Principal(title: "Un Saludo xd"),
+    const Calculadora(title: "Calculadora Epica"),
+    const Segunda(title: "Segunda patalla")
+
   ];
 
   void _cambiaPantalla(int i) {//recibe indice para saber el boton pulsado

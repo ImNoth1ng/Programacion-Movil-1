@@ -1,8 +1,6 @@
+import 'package:epico1/services/local_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
-import 'package:shared_preferences_android/shared_preferences_android.dart';
 
 class Bienvenida extends StatefulWidget {
   const Bienvenida({super.key, required this.title});
@@ -13,17 +11,34 @@ class Bienvenida extends StatefulWidget {
   State<Bienvenida> createState() => _BienvenidaState();
 }
 
+
+
+
 class _BienvenidaState extends State<Bienvenida> {
-  SharedPreferences? prefs;
-  void iniciaPreferencias() async {
-    final SharedPreferences _prefs = await SharedPreferences.getInstance();
-  }
 
 
   int _counter = 1;
   double _tamanoTexto = 24.0; // Tamaño inicial del texto
 
-  TextEditingController _nombre =TextEditingController();
+  TextEditingController _Putnombre =TextEditingController();
+
+  String? _getname() {
+    if(LocalStorage.prefs.getString('nombre') != null){
+      return LocalStorage.prefs.getString('nombre');
+    }
+    else {
+      return '';
+    }
+  }
+
+  String? _name;
+
+  @override
+  void initState() {
+    _name = _getname();
+    super.initState();
+  }
+
 
   void _incrementCounter() {
     setState(() {
@@ -47,32 +62,50 @@ class _BienvenidaState extends State<Bienvenida> {
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
+          spacing: 30,
           children: <Widget>[
-            const Text('Pàgina dowos'),
+            SizedBox(
+              height: 150
+              ,
+              child: Text('Bienvenido ${_name}',
+                style: TextStyle(
+                  fontSize: 24,
+                ),
+                textAlign: TextAlign.center,
+
+              ),
+            ),
+
+            Text('Ingresa tu nombre: ',
+              style: TextStyle(
+                  fontSize: 18,
+              ),
+            ),
             SizedBox(
               width: 300,
               child: TextField(
-                controller:  _nombre,
+                controller:  _Putnombre,
                 style:
                   TextStyle(
                     fontSize: 32,
                   ),
               ),
             ),
-            MaterialButton(onPressed: (){},
+            MaterialButton(onPressed: (){
+              setState(() {
+                _name = (_Putnombre.text == "") ? 'Usuario' : _Putnombre.text;
+                _Putnombre.text = "";
+                LocalStorage.prefs.setString('nombre', _name!);
+              });
+            },
               child: Text('ACEPTAR'),
             )
           ],
         ),
       ),
-      floatingActionButton: Column(
+      /*floatingActionButton: Column(
         verticalDirection: VerticalDirection.up,
         children: [
-          FloatingActionButton(
-            onPressed: _incrementCounter,
-            tooltip: 'Sumar al contador',
-            child: const Icon(Icons.add),
-          ),
           const SizedBox(height: 10),
           FloatingActionButton(
             onPressed: _sizeoftexto,
@@ -80,7 +113,7 @@ class _BienvenidaState extends State<Bienvenida> {
             child: const Icon(Icons.zoom_in),
           ),
         ],
-      ),
+      ),*/
     );
   }
 }
