@@ -20,7 +20,7 @@ class _BienvenidaState extends State<Bienvenida> {
   int _counter = 1;
   double _tamanoTexto = 24.0; // Tamaño inicial del texto
 
-  TextEditingController _Putnombre =TextEditingController();
+  final TextEditingController _Putnombre =TextEditingController();
 
   String? _getname() {
     if(LocalStorage.prefs.getString('nombre') != null){
@@ -67,7 +67,7 @@ class _BienvenidaState extends State<Bienvenida> {
             SizedBox(
               height: 150
               ,
-              child: Text('Bienvenido ${_name}',
+              child: Text('Bienvenido $_name',
                 style: TextStyle(
                   fontSize: 24,
                 ),

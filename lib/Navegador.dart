@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:epico1/Pantallas/principal.dart';
 import 'package:epico1/Pantallas/segunda.dart';
 import 'package:epico1/Pantallas/bienvenida.dart';
+import 'package:epico1/Pantallas/Coords.dart';
 
 class Navegador extends StatefulWidget{
   const Navegador({super.key});
@@ -16,14 +17,15 @@ class _NavegadorState extends State<Navegador> {
 
   Widget? _cuerpo;
 
-  int _p =0;
-  int _pantalla= 0;
+  final int _p =0;
+  final int _pantalla= 0;
 
   final _Pantallas = [
-    const Bienvenida(title: "WellcUM"),
+    const Bienvenida(title: "Bienvenido cawn"),
     const Principal(title: "Un Saludo xd"),
     const Calculadora(title: "Calculadora Epica"),
-    const Segunda(title: "Segunda patalla")
+    const Segunda(title: "Segunda patalla"),
+    const CoordsScreen(title: "Coordenadas")
 
   ];
 
@@ -65,6 +67,11 @@ class _NavegadorState extends State<Navegador> {
         BottomNavigationBarItem(
           icon: Icon(Icons.numbers_rounded),
           label: 'Contador',
+
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.map),
+          label: 'CoordsScreen',
 
         ),
         ],

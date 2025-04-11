@@ -61,7 +61,7 @@ class _PrincipalState extends State<Principal> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              '${_Saludo} Para: ${_name}',
+              '$_Saludo Para: $_name',
               style: TextStyle( fontSize: 24,),
             ),
             /*Text(
