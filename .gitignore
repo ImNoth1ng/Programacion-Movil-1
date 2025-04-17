@@ -18,10 +18,8 @@ migrate_working_dir/
 *.iws
 .idea/
 
-# The .vscode folder contains launch configuration and tasks you configure in
-# VS Code which you may wish to be included in version control, so this line
-# is commented out by default.
-#.vscode/
+# VS Code related
+.vscode/
 
 # Flutter/Dart/Pub related
 **/doc/api/
@@ -43,3 +41,30 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Firebase related
+android/app/google-services.json
+ios/Runner/GoogleService-Info.plist
+.firebase/
+.firebaserc
+
+# Environment files
+.env
+.env.*
+
+# Metadata and packages
+.metadata
+.packages
+
+# Output files
+/out/
+*.apk
+*.aab
+*.ipa
+
+# Logs
+*.log
+
+# Generated files
+lib/firebase_options.dart
+firebase.json

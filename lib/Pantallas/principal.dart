@@ -1,5 +1,8 @@
 import 'package:epico1/services/local_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+FirebaseFirestore db = FirebaseFirestore.instance;
 
 class Principal extends StatefulWidget {
   const Principal({super.key, required this.title});
@@ -12,82 +15,116 @@ class Principal extends StatefulWidget {
 
 class _PrincipalState extends State<Principal> {
   int _counter = 0;
-  String _Saludo = "Un Saludo";
-  void _incrementCounter() {
-    setState(() {
+  String _saludo = "Un Saludo";
+  String? _name;
 
-      _counter++;
-      _Saludos();
-    });
-  }
-
-  void  _Saludos(){
-    if (_counter > 0){
-      _Saludo = '${_counter+1} saludos';
-    } else if (_counter == 0){
-      _Saludo = "Un Saludo";
-    } else if (_counter == -1){
-      _Saludo = "NO HAY SALUDOS";
-    } else if (_counter < -1){
-      _Saludo = "Hay una deuda de ${(_counter+1)*-1} saludos";
+  final test = <String, dynamic>{
+    'num': 0,
+  };
+  // Función que obtiene el saludo desde Firestore
+  Future<void> _getSaludo() async {
+    try {
+      final docRef = db.collection("saludos").doc("test");
+      final DocumentSnapshot doc = await docRef.get(); // Esperamos a que se resuelva el Future
+      if (doc.exists) {
+        final data = doc.data() as Map<String, dynamic>;
+        setState(() {
+          _counter = data['num']?.toInt() ?? 0;
+          test['num'] = _counter; // Asignamos el valor de 'num' a _counter
+          _actualizarSaludo(); // Actualizamos el texto del saludo
+        });
+      } else {
+        print("El documento no existe");
+      }
+    } catch (e) {
+      print("Error obteniendo el documento: $e");
     }
   }
 
-  String? _name;
+  // Función para actualizar el texto del saludo
+  void _actualizarSaludo() {
+    if (_counter > 0) {
+      _saludo = '$_counter saludos';
+    } else if (_counter == 1) {
+      _saludo = "Un Saludo";
+    } else if (_counter == 0) {
+      _saludo = "NO HAY SALUDOS";
+    } else if (_counter < 0) {
+      _saludo = "Hay una deuda de ${_counter * -1} saludos";
+    }
+  }
+
+  // Incrementa el contador y actualiza el saludo
+  void _incrementCounter() {
+    setState(() {
+      _counter++;
+      test['num'] = _counter; // Asignamos el valor de 'num' a _counter
+      db.collection("saludos").doc("test").set(test); // Actualizamos Firestore
+      _actualizarSaludo();
+    });
+  }
+
+  // Decrementa el contador y actualiza el saludo
+  void _decrementCounter() {
+    setState(() {
+      _counter--;
+      test['num'] = _counter; // Asignamos el valor de 'num' a _counter
+      db.collection("saludos").doc("test").set(test); // Actualizamos Firestore
+      _actualizarSaludo();
+    });
+  }
 
   @override
   void initState() {
-    _Saludos();
-    if (LocalStorage.prefs.getString('nombre') != null || LocalStorage.prefs.getString('nombre') != "" ){
-      _name = LocalStorage.prefs.getString('nombre');
-    } else { _name = "Usuari@";}
     super.initState();
+
+    // Cargamos el valor inicial desde Firestore
+    _getSaludo();
+
+    // Obtenemos el nombre del usuario desde LocalStorage
+    final storedName = LocalStorage.prefs.getString('nombre');
+    if (storedName != null && storedName.isNotEmpty) {
+      _name = storedName;
+    } else {
+      _name = "Ti";
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
-
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
-
       ),
       body: Center(
-
         child: Column(
-
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              '$_Saludo Para: $_name',
-              style: TextStyle( fontSize: 24,),
+              '$_saludo Para $_name',
+              style: const TextStyle(fontSize: 24),
             ),
-            /*Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),*/
-            FloatingActionButton(onPressed: (){
-              setState(() {
-                _counter--;
-                _Saludos();
-              });
-
-
-            },
-
-            )
+            const SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                FloatingActionButton(
+                  onPressed: _decrementCounter,
+                  tooltip: 'Restar',
+                  child: const Icon(Icons.remove),
+                ),
+                const SizedBox(width: 20),
+                FloatingActionButton(
+                  onPressed: _incrementCounter,
+                  tooltip: 'Sumar',
+                  child: const Icon(Icons.add),
+                ),
+              ],
+            ),
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        hoverColor: Theme.of(context).colorScheme.onPrimary,
-
-        tooltip: 'Suma xd',
-        child: const Icon(Icons.add_circle_outline_rounded),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
