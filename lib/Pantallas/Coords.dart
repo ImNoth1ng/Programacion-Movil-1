@@ -15,16 +15,23 @@ class CoordsScreen extends StatefulWidget {
 }
 
 class _CoordsScreenState extends State<CoordsScreen> {
-  /// Texto que muestra las coordenadas o mensajes de estado
-  String _coords = "COORDS";
+  /// Controlador para el campo de texto de coordenadas
+  final TextEditingController _coordsController = TextEditingController();
+  /// Texto que muestra el estado actual
+  String _statusMessage = "COORDS";
+
+  @override
+  void dispose() {
+    // Limpiar el controlador cuando el widget se destruye
+    _coordsController.dispose();
+    super.dispose();
+  }
 
   /// Método para obtener las coordenadas actuales
   /// Verifica permisos y muestra diálogos si es necesario
   Future<void> _obtenerCoordenadas() async {
-    // Verificar si tenemos permisos de ubicación
     bool hasPermission = await LocationService.checkAndRequestLocationPermission();
     if (!hasPermission) {
-      // Si no tenemos permisos y el widget está montado, mostrar diálogo
       if (mounted) {
         await LocationService.showLocationDialog(context);
       }
@@ -32,23 +39,23 @@ class _CoordsScreenState extends State<CoordsScreen> {
     }
 
     try {
-      // Intentar obtener la ubicación actual
       Position? position = await LocationService.getCurrentLocation();
       if (position != null) {
-        // Si se obtuvo la ubicación, actualizar el estado con las coordenadas
         setState(() {
-          _coords = "Lat: ${position.latitude}, Lng: ${position.longitude}";
+          _statusMessage = "Coordenadas obtenidas";
+          // Formatear las coordenadas con 6 decimales y separadas por coma
+          _coordsController.text = "${position.latitude.toStringAsFixed(6)},${position.longitude.toStringAsFixed(6)}";
         });
       } else {
-        // Si no se pudo obtener la ubicación, mostrar mensaje de error
         setState(() {
-          _coords = "No se pudo obtener la ubicación";
+          _statusMessage = "No se pudo obtener la ubicación";
+          _coordsController.clear();
         });
       }
     } catch (e) {
-      // Si ocurre un error, mostrar el mensaje de error
       setState(() {
-        _coords = "Error: $e";
+        _statusMessage = "Error: $e";
+        _coordsController.clear();
       });
     }
   }
@@ -66,17 +73,62 @@ class _CoordsScreenState extends State<CoordsScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // Texto que muestra las coordenadas
+            // Texto de estado
             Text(
-              _coords,
+              _statusMessage,
               style: const TextStyle(
-                fontSize: 40, 
-                fontWeight: FontWeight.bold, 
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
                 color: Colors.purple
               ),
             ),
             const SizedBox(height: 20),
-            // Botón para obtener las coordenadas
+            // Etiquetas de latitud y longitud
+            const Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  "Lat: ",
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(width: 20),
+                Text(
+                  "Long: ",
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 10),
+            // Campo de texto para las coordenadas
+            Container(
+              width: 300,
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: TextField(
+                controller: _coordsController,
+                readOnly: true,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  filled: true,
+                  fillColor: Colors.grey[200],
+                  hintText: "Coordenadas...",
+                ),
+              ),
+            ),
+            const SizedBox(height: 20),
+            // Botón para obtener coordenadas
             ElevatedButton(
               onPressed: _obtenerCoordenadas,
               style: ElevatedButton.styleFrom(
