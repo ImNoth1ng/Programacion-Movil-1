@@ -1,6 +1,8 @@
 import 'package:epico1/Navegador.dart';
 import 'package:flutter/material.dart';
 
+import 'Pantallas/login.dart';
+
 
 
 
@@ -19,7 +21,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
 
       ),
-      home: const Navegador(),
+      home: const LoginPage(),
     );
   }
 }

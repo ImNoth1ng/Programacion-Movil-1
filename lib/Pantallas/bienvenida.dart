@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:epico1/services/local_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -12,13 +13,12 @@ class Bienvenida extends StatefulWidget {
 }
 
 
+FirebaseFirestore db = FirebaseFirestore.instance;
 
 
 class _BienvenidaState extends State<Bienvenida> {
 
-
-  int _counter = 1;
-  double _tamanoTexto = 24.0; // Tamaño inicial del texto
+  final String? _user = LocalStorage.prefs.getString('user');
 
   final TextEditingController _Putnombre =TextEditingController();
 
@@ -27,7 +27,46 @@ class _BienvenidaState extends State<Bienvenida> {
       return LocalStorage.prefs.getString('nombre');
     }
     else {
-      return '';
+      _getdbname();
+    }
+  }
+
+  void _updateName(String newName) {
+    LocalStorage.prefs.setString('nombre', newName);
+    db.collection("users").doc(_user).set({'name': newName}, SetOptions(merge: true)); // Actualizamos Firestore
+  }
+
+  Future<void> _getdbname() async {
+    try {
+      // Obtén el usuario almacenado en LocalStorage
+
+
+      // Verifica que _user no sea nulo
+      if (_user == null || _user.isEmpty) {
+        print("No se encontró un usuario en LocalStorage");
+        return;
+      }
+
+      // Referencia al documento en la colección "users"
+      final docRef = db.collection("users").doc(_user);
+
+      // Obtén el documento
+      final DocumentSnapshot doc = await docRef.get();
+
+      if (doc.exists) {
+        // Convierte los datos del documento a un Map
+        final data = doc.data() as Map<String, dynamic>;
+
+        // Actualiza el estado con el campo "name"
+        setState(() {
+          _name = data['name'] ?? 'Nombre no disponible'; // Asigna el valor de "name" o un valor por defecto
+          _updateName(_name!); // Actualiza el nombre en LocalStorage
+        });
+      } else {
+        print("El documento no existe");
+      }
+    } catch (e) {
+      print("Error obteniendo el documento: $e");
     }
   }
 
@@ -39,18 +78,6 @@ class _BienvenidaState extends State<Bienvenida> {
     super.initState();
   }
 
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
-  void _sizeoftexto() {
-    setState(() {
-      _tamanoTexto += 5.0; // Aumenta el tamaño en 5 píxeles por clic
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -95,7 +122,7 @@ class _BienvenidaState extends State<Bienvenida> {
               setState(() {
                 _name = (_Putnombre.text == "") ? 'Usuario' : _Putnombre.text;
                 _Putnombre.text = "";
-                LocalStorage.prefs.setString('nombre', _name!);
+                _updateName(_name!);
               });
             },
               child: Text('ACEPTAR'),

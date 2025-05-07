@@ -18,19 +18,17 @@ class _PrincipalState extends State<Principal> {
   String _saludo = "Un Saludo";
   String? _name;
 
-  final test = <String, dynamic>{
-    'num': 0,
-  };
+  final String? _user = LocalStorage.prefs.getString('user');
+
   // Función que obtiene el saludo desde Firestore
   Future<void> _getSaludo() async {
     try {
-      final docRef = db.collection("saludos").doc("test");
+      final docRef = db.collection("users").doc(_user);
       final DocumentSnapshot doc = await docRef.get(); // Esperamos a que se resuelva el Future
       if (doc.exists) {
         final data = doc.data() as Map<String, dynamic>;
         setState(() {
-          _counter = data['num']?.toInt() ?? 0;
-          test['num'] = _counter; // Asignamos el valor de 'num' a _counter
+          _counter = data['saludos']?.toInt() ?? 0;
           _actualizarSaludo(); // Actualizamos el texto del saludo
         });
       } else {
@@ -58,8 +56,8 @@ class _PrincipalState extends State<Principal> {
   void _incrementCounter() {
     setState(() {
       _counter++;
-      test['num'] = _counter; // Asignamos el valor de 'num' a _counter
-      db.collection("saludos").doc("test").set(test); // Actualizamos Firestore
+      //db.collection("saludos").doc("test").set(test); // Actualizamos Firestore
+      db.collection("users").doc(_user).set({'saludos': _counter}, SetOptions(merge: true)); // Actualizamos Firestore
       _actualizarSaludo();
     });
   }
@@ -68,8 +66,8 @@ class _PrincipalState extends State<Principal> {
   void _decrementCounter() {
     setState(() {
       _counter--;
-      test['num'] = _counter; // Asignamos el valor de 'num' a _counter
-      db.collection("saludos").doc("test").set(test); // Actualizamos Firestore
+      //db.collection("saludos").doc("test").set(test); // Actualizamos Firestore
+      db.collection("users").doc(_user).set({'saludos': _counter}, SetOptions(merge: true)); // Actualizamos Firestore
       _actualizarSaludo();
     });
   }
