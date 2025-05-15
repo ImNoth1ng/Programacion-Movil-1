@@ -49,7 +49,7 @@ class _CalendarioState extends State<Calendario> {
     _fechaAgendarI = null;
     _fechaAgendarF = null;
     _todoDia = false;
-    _pickerColor = Colors.deepOrange;
+    _pickerColor = Colors.orange;
   }
 
 
@@ -63,7 +63,7 @@ class _CalendarioState extends State<Calendario> {
   DateTime? _fechaAgendarI;
   DateTime? _fechaAgendarF;
   bool _todoDia=false;
-  Color _pickerColor = Colors.deepOrange;
+  Color _pickerColor = Colors.orange;
   TextEditingController _nombreEvento = TextEditingController();
 
 

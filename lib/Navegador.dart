@@ -1,4 +1,6 @@
+import 'package:epico1/Pantallas/Calendar.dart';
 import 'package:epico1/Pantallas/calc.dart';
+import 'package:epico1/Pantallas/custom.dart';
 import 'package:flutter/material.dart';
 import 'package:epico1/Pantallas/principal.dart';
 import 'package:epico1/Pantallas/segunda.dart';
@@ -18,11 +20,13 @@ class _NavegadorState extends State<Navegador> {
 
   // Lista de pantallas disponibles
   final List<Widget> _pantallas = [
-    const Bienvenida(title: "Bienvenido cawn"),
+    const Bienvenida(title: "Bienvenido"),
     const Principal(title: "Un Saludo xd"),
     const Calculadora(title: "Calculadora Epica"),
     const Segunda(title: "Segunda patalla"),
-    const CoordsScreen(title: "Coordenadas")
+    const CoordsScreen(title: "Coordenadas"),
+    const Calendario(title: "Calendario"),
+    const Tarjetas(title: "TarjetasC")
   ];
 
   // Método para cambiar de pantalla
@@ -63,6 +67,14 @@ class _NavegadorState extends State<Navegador> {
           BottomNavigationBarItem(
             icon: Icon(Icons.map),
             label: 'Coordenadas',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.calendar_month),
+            label: 'Calendario',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.dashboard_customize),
+            label: 'Personalizar',
           ),
         ],
         onTap: _cambiarPantalla,
