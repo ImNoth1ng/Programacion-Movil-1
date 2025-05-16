@@ -35,7 +35,8 @@ class _TarjetasState extends State<Tarjetas> {
             TarjetasPerso(
                 nombres: ["UNAM", "IPN", "TEC de Monterrey","UNAM", "IPN", "TEC de Monterrey"],
                 descripciones: ["Universidad publica", "Universidad publica", "Universidad privada","Universidad publica", "Universidad publica", "Universidad privada"],
-                rutas: ["assets/images/unam.jpg","assets/images/poli.jpg", "assets/images/tec.jpg","assets/images/unam.jpg","assets/images/poli.jpg", "assets/images/tec.jpg"])
+                rutas: ["assets/images/unam.jpg","assets/images/poli.jpg", "assets/images/tec.jpg","assets/images/unam.jpg","assets/images/poli.jpg", "assets/images/tec.jpg"],
+            )
           ],
         ),
       ),
