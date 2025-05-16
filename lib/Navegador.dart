@@ -1,3 +1,4 @@
+import 'package:epico1/Pantallas/Botones.dart';
 import 'package:epico1/Pantallas/Calendar.dart';
 import 'package:epico1/Pantallas/calc.dart';
 import 'package:epico1/Pantallas/custom.dart';
@@ -26,7 +27,8 @@ class _NavegadorState extends State<Navegador> {
     const Segunda(title: "Segunda patalla"),
     const CoordsScreen(title: "Coordenadas"),
     const Calendario(title: "Calendario"),
-    const Tarjetas(title: "TarjetasC")
+    const Tarjetas(title: "TarjetasC"),
+    const Botones(title: "Botones")
   ];
 
   // Método para cambiar de pantalla
@@ -73,8 +75,12 @@ class _NavegadorState extends State<Navegador> {
             label: 'Calendario',
           ),
           BottomNavigationBarItem(
+            icon: Icon(Icons.card_membership),
+            label: 'TarjetasP',
+          ),
+          BottomNavigationBarItem(
             icon: Icon(Icons.dashboard_customize),
-            label: 'Personalizar',
+            label: 'BotonesP',
           ),
         ],
         onTap: _cambiarPantalla,
