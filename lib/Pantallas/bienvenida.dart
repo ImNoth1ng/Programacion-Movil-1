@@ -74,7 +74,7 @@ class _BienvenidaState extends State<Bienvenida> {
 
   @override
   void initState() {
-    _name = _getname();
+    _getdbname();
     super.initState();
   }
 
