@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
+import '../services/local_storage.dart';
+
 class Calendario extends StatefulWidget {
   const Calendario({super.key, required this.title});
 
@@ -18,17 +20,26 @@ class Calendario extends StatefulWidget {
 class _CalendarioState extends State<Calendario> {
 
   FirebaseFirestore db =  FirebaseFirestore.instance;
+  final String? _user = LocalStorage.prefs.getString('user');
   List<String> nombreEventos = [];
   List<Map<String, dynamic>> eventos=[];
 
-  void _leerEventos() async{
-    nombreEventos.clear();
-    eventos.clear();
-    QuerySnapshot consulta = await db.collection("eventos").get();
-    for(DocumentSnapshot doc in consulta.docs){
-      nombreEventos.add(doc.id);
-      eventos.add(doc.data() as Map<String, dynamic>);
+  void _leerEventos() async {
+    try {
+      nombreEventos.clear();
+      eventos.clear();
+      QuerySnapshot consulta = await db.collection("users").doc(_user).collection("eventos").get();
 
+      if (consulta.docs.isNotEmpty) {
+        for (DocumentSnapshot doc in consulta.docs) {
+          nombreEventos.add(doc.id);
+          eventos.add(doc.data() as Map<String, dynamic>);
+        }
+      } else {
+        print("No se encontraron eventos en la base de datos.");
+      }
+    } catch (e) {
+      print("Error al leer eventos: $e");
     }
     setState(() {});
   }
@@ -41,7 +52,7 @@ class _CalendarioState extends State<Calendario> {
       "todoDia": _todoDia,
     };
     print("guardado en bd");
-    await db.collection("eventos").doc(nombreEvento).set(datos);
+    await db.collection("users").doc(_user).collection("eventos").doc(nombreEvento).set(datos);
   }
 
   void limpiarValores(){
@@ -338,23 +349,27 @@ class MeetingDataSource extends CalendarDataSource {
 
 
 List<Meeting> _getDataSource(List<String> nombreEventos, List<Map<String, dynamic>> eventos) {
-
   final List<Meeting> meetings = <Meeting>[];
 
-  for(int i=0; i<nombreEventos.length; i++){
+  if (nombreEventos.isNotEmpty && eventos.isNotEmpty) {
+    for (int i = 0; i < nombreEventos.length; i++) {
+      try {
+        DateTime fechaInicio = (eventos[i]["fechaInicio"] as Timestamp).toDate();
+        DateTime fechaFin = (eventos[i]["fechaFin"] as Timestamp).toDate();
+        Color color = Color((eventos[i]["color"]));
+        bool todoDia = eventos[i]["todoDia"] ?? false;
 
-    DateTime fechaInicio, fechaFin;
-    fechaInicio = (eventos[i]["fechaInicio"] as Timestamp).toDate();
-    fechaFin = (eventos[i]["fechaFin"] as Timestamp).toDate();
-    Color color = Color((eventos[i]["color"]));
-    bool todoDia = eventos[i]["todoDia"] ?? false;
-
-    meetings.add(
-        Meeting(nombreEventos[i], fechaInicio, fechaFin, color, todoDia)
-    );
-
-
+        meetings.add(
+          Meeting(nombreEventos[i], fechaInicio, fechaFin, color, todoDia),
+        );
+      } catch (e) {
+        print("Error al procesar evento: $e");
+      }
+    }
+  } else {
+    print("No hay eventos para mostrar.");
   }
+
   return meetings;
 }
 
